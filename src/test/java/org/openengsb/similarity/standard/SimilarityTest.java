@@ -1,5 +1,6 @@
 package org.openengsb.similarity.standard;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -10,18 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.standard.impl.DefaultSimilarityIndex;
+import org.openengsb.similarity.standard.impl.StandardIndexer;
+import org.openengsb.similarity.standard.impl.StandardSearcher;
 
 public class SimilarityTest {
 
-    private DefaultSimilarityIndex index;
+    private StandardIndexer index;
+    private StandardSearcher searcher;
     private static List<EDBObject> inserts;
     private static List<EDBObject> deletes;
     private static List<EDBObject> updates;
@@ -41,7 +42,8 @@ public class SimilarityTest {
 
     @Before
     public void setUp() throws IOException {
-        index = new DefaultSimilarityIndex();
+        index = new StandardIndexer();
+        searcher = new StandardSearcher();
     }
 
     @After
@@ -51,32 +53,36 @@ public class SimilarityTest {
 
     @Test
     public void testIndexModificationInsert() throws IOException {
-        Assert.assertEquals(0, index.getWriter().numDocs());
+        assertEquals(0, index.getWriter().numDocs());
         index.updateIndex(inserts, null, null);
-        Assert.assertEquals(100, index.getWriter().numDocs());
-        index.commit();
+        assertEquals(100, index.getWriter().numDocs());
+        index.close();
     }
 
     @Test
     public void testIndexModificationUpdate() throws IOException {
-        Assert.assertEquals(0, index.getWriter().numDocs());
+        assertEquals(0, index.getWriter().numDocs());
         index.updateIndex(inserts, null, null);
-        Assert.assertEquals(100, index.getWriter().numDocs());
+        assertEquals(100, index.getWriter().numDocs());
         index.updateIndex(null, updates, null);
-        Assert.assertEquals(100, index.getWriter().numDocs());
+        assertEquals(100, index.getWriter().numDocs());
+        index.close();
+
+        assertEquals(1, searcher.findCollisions(updates.get(0)).size());
+        // assertEquals(updates.get(0).getOID(), index.findCollisions(updates.get(0)).get(0));
 
         // TODO check if only 20-30 are updated
-        index.commit();
         fail("Not yet implemented");
     }
 
     @Test
     public void testIndexModificatioDelete() throws IOException {
-        Assert.assertEquals(0, index.getWriter().numDocs());
+        assertEquals(0, index.getWriter().numDocs());
         index.updateIndex(inserts, null, null);
-        Assert.assertEquals(100, index.getWriter().numDocs());
+        assertEquals(100, index.getWriter().numDocs());
         index.updateIndex(null, null, deletes);
-        Assert.assertEquals(90, index.getWriter().numDocs());
+        assertEquals(90, index.getWriter().numDocs());
+        index.close();
 
         // TODO check if only 1-10 are deleted
 
@@ -107,7 +113,7 @@ public class SimilarityTest {
             Map<String, Object> randomData = new HashMap<String, Object>();
 
             for (int j = 0; j < fieldCount; j++) {
-                randomData.put(String.valueOf(j), UUID.randomUUID());
+                randomData.put("key" + String.valueOf(j), UUID.randomUUID().toString());
             }
 
             EDBObject e = new EDBObject(UUID.randomUUID().toString(), randomData);
