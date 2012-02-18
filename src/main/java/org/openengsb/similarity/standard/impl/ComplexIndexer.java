@@ -8,10 +8,10 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class StandardIndexer extends AbstractIndexer {
+public class ComplexIndexer extends AbstractIndexer {
 
-    public StandardIndexer() throws IOException {
-        super("standard");
+    public ComplexIndexer() throws IOException {
+        super("complex");
     }
 
     @Override
@@ -23,8 +23,9 @@ public class StandardIndexer extends AbstractIndexer {
                 Field.Index.NOT_ANALYZED));
         }
 
+        doc.add(new Field("complexKey", content.get("key1").toString() + "#" + content.get("key2").toString()
+                + "#" + content.get("key3").toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
-
     }
-
 }

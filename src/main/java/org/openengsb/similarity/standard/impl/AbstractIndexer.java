@@ -11,6 +11,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.util.Version;
 import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.core.api.edb.EngineeringDatabaseService;
@@ -18,19 +19,28 @@ import org.openengsb.similarity.standard.Indexer;
 
 public abstract class AbstractIndexer implements Indexer {
 
-    protected final String PATH = "default";
+    protected String path = "default";
 
     protected EngineeringDatabaseService edbService;
 
-    protected final IndexWriter writer;
-    protected final Directory index;
+    protected IndexWriter writer;
+    protected Directory index;
     protected IndexWriterConfig indexConfig;
 
     abstract protected void addDocument(EDBObject c) throws IOException;
 
     public AbstractIndexer() throws IOException {
+        init();
+    }
+
+    public AbstractIndexer(String path) throws IOException {
+        this.path = path;
+        init();
+    }
+
+    private void init() throws IOException, CorruptIndexException, LockObtainFailedException {
         indexConfig = new IndexWriterConfig(Version.LUCENE_35, new WhitespaceAnalyzer(Version.LUCENE_35));
-        this.index = FSDirectory.open(new File(PATH));
+        this.index = FSDirectory.open(new File(path));
         this.writer = new IndexWriter(index, indexConfig);
     }
 
@@ -118,8 +128,8 @@ public abstract class AbstractIndexer implements Indexer {
         return writer;
     }
 
-    public String getPATH() {
-        return PATH;
+    public String getPath() {
+        return path;
     }
 
 }

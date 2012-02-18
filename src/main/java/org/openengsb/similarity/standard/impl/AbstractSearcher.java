@@ -25,7 +25,7 @@ import org.openengsb.similarity.standard.Searcher;
 
 public abstract class AbstractSearcher implements Searcher {
 
-    protected final String PATH = "default";
+    protected String path = "default";
     protected final int MAX_NUMBER_OF_HITS = 50;
 
     // TODO load EDB converter & EDB (JPA) service
@@ -33,14 +33,23 @@ public abstract class AbstractSearcher implements Searcher {
     protected QueryInterface queryInterfaceService;
 
     protected IndexReader reader;
-    protected final Directory index;
+    protected Directory index;
     protected IndexWriterConfig indexConfig;
 
     abstract protected String buildQueryString(EDBObject sample);
 
     public AbstractSearcher() throws IOException {
+        init();
+    }
+
+    public AbstractSearcher(String path) throws IOException {
+        this.path = path;
+        init();
+    }
+
+    private void init() throws IOException {
         indexConfig = new IndexWriterConfig(Version.LUCENE_35, new WhitespaceAnalyzer(Version.LUCENE_35));
-        this.index = FSDirectory.open(new File(PATH));
+        this.index = FSDirectory.open(new File(path));
     }
 
     @Override
