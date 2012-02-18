@@ -66,14 +66,8 @@ public abstract class AbstractSearcher implements Searcher {
     }
 
     @Override
-    public List<ArrayList<String>> query(String query) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    protected ArrayList<String> search(EDBObject sample) {
+    public ArrayList<String> query(String searchString) {
         ArrayList<String> result = new ArrayList<String>();
-        String searchString = buildQueryString(sample);
 
         try {
             reader = IndexReader.open(index);
@@ -91,13 +85,18 @@ public abstract class AbstractSearcher implements Searcher {
                 result.add(document.get("oid"));
             }
             searcher.close();
+            reader.close();
         } catch (ParseException e) {
             result = new ArrayList<String>();
         } catch (IOException e) {
             result = new ArrayList<String>();
         }
-
         return result;
+    }
+
+    protected ArrayList<String> search(EDBObject sample) {
+        String searchString = buildQueryString(sample);
+        return query(searchString);
     }
 
     protected void cleanupSearch() {

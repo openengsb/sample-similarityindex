@@ -20,6 +20,6 @@ public interface Searcher {
     /**
      * query the index with lucene syntax
      */
-    public List<ArrayList<String>> query(String query);
+    public ArrayList<String> query(String searchString);
 
 }

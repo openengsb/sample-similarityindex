@@ -48,6 +48,7 @@ public class SimilarityTest {
 
     @After
     public void tearDown() {
+        index.close();
         pruneIndex(new File(index.getPATH()));
     }
 
@@ -68,11 +69,8 @@ public class SimilarityTest {
         assertEquals(100, index.getWriter().numDocs());
         index.close();
 
-        assertEquals(1, searcher.findCollisions(updates.get(0)).size());
-        // assertEquals(updates.get(0).getOID(), index.findCollisions(updates.get(0)).get(0));
-
-        // TODO check if only 20-30 are updated
-        fail("Not yet implemented");
+        assertEquals(1, searcher.query(generateSearchString(updates.get(0))).size());
+        assertEquals(updates.get(0).getOID(), searcher.query(generateSearchString(updates.get(0))).get(0));
     }
 
     @Test
@@ -84,9 +82,7 @@ public class SimilarityTest {
         assertEquals(90, index.getWriter().numDocs());
         index.close();
 
-        // TODO check if only 1-10 are deleted
-
-        fail("Not yet implemented");
+        assertEquals(new ArrayList<String>(), searcher.query(generateSearchString(deletes.get(0))));
     }
 
     @Test
@@ -100,12 +96,9 @@ public class SimilarityTest {
     }
 
     /**
-     * generates an amount of random EDBObjects, based on a given number the size of the EDBObjects is defined bey the
+     * generates an amount of random EDBObjects, based on a given number the size of the EDBObjects is defined by the
      * fieldCount
      * 
-     * @param number
-     * @param fieldCount
-     * @return
      */
     private static List<EDBObject> buildEDBObjects(int number, int fieldCount) {
         List<EDBObject> result = new ArrayList<EDBObject>();
@@ -134,6 +127,18 @@ public class SimilarityTest {
             }
         }
         return (path.delete());
+    }
+
+    private String generateSearchString(EDBObject sample) {
+        String result = "";
+        for (Map.Entry<String, Object> entry : sample.entrySet()) {
+            if (result.length() != 0) {
+                result += " AND ";
+            }
+            result += entry.getKey().toString() + ":" + entry.getValue().toString();
+        }
+
+        return result;
     }
 
 }

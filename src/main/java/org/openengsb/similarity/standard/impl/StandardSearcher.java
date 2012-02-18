@@ -20,7 +20,7 @@ public class StandardSearcher extends AbstractSearcher {
             if (result.length() != 0) {
                 result += " AND ";
             }
-            result += "\"" + entry.getKey().toString() + ":" + entry.getValue().toString() + "\"";
+            result += entry.getKey().toString() + ":" + entry.getValue().toString();
             return result;
         }
 
