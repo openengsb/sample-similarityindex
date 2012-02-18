@@ -1,11 +1,11 @@
 package org.openengsb.similarity.standard;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,13 +86,21 @@ public class SimilarityTest {
     }
 
     @Test
-    public void findCollissionFails() {
-        fail("Not yet implemented");
+    public void findCollissionSuccess() {
+        Map<String, Object> object1 = setupConcreteData();
+
+        object1.put("key1", "valueX");
+        EDBObject sample = new EDBObject(UUID.randomUUID().toString(), object1);
+        assertEquals(1, searcher.findCollisions(sample).size());
     }
 
     @Test
-    public void findCollissionSuccess() {
-        fail("Not yet implemented");
+    public void findCollissionFails() {
+        Map<String, Object> object1 = setupConcreteData();
+
+        object1.put("key1", "valuXX");
+        EDBObject sample = new EDBObject(UUID.randomUUID().toString(), object1);
+        assertEquals(0, searcher.findCollisions(sample).size());
     }
 
     /**
@@ -139,6 +147,26 @@ public class SimilarityTest {
         }
 
         return result;
+    }
+
+    private Map<String, Object> setupConcreteData() {
+        Map<String, Object> object1 = new HashMap<String, Object>();
+        object1.put("key1", "value1");
+        object1.put("key2", "value2");
+        object1.put("key3", "value3");
+        EDBObject edbOb1 = new EDBObject(UUID.randomUUID().toString(), object1);
+
+        Map<String, Object> object2 = new HashMap<String, Object>();
+        object1.put("key4", "value4");
+        object1.put("key5", "value5");
+        object1.put("key6", "value6");
+        EDBObject edbOb2 = new EDBObject(UUID.randomUUID().toString(), object2);
+
+        List<EDBObject> data = new ArrayList<EDBObject>(Arrays.asList(edbOb1, edbOb2));
+
+        index.updateIndex(data, null, null);
+        index.close();
+        return object1;
     }
 
 }

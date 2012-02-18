@@ -1,7 +1,6 @@
 package org.openengsb.similarity.standard.impl;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.openengsb.core.api.edb.EDBObject;
 
@@ -16,13 +15,9 @@ public class StandardSearcher extends AbstractSearcher {
         // ConcreteModel model = edbConverter.convertEDBObjectToModel(ConcreteModel.class, sample);
 
         String result = "";
-        for (Map.Entry<String, Object> entry : sample.entrySet()) {
-            if (result.length() != 0) {
-                result += " AND ";
-            }
-            result += entry.getKey().toString() + ":" + entry.getValue().toString();
-            return result;
-        }
+        result += "key1:" + sample.getString("key1") + "~0.8 AND";
+        result += "key2:" + sample.getString("key2") + "~0.8 AND";
+        result += "key3:" + sample.getString("key3") + "~0.8";
 
         return result;
     }

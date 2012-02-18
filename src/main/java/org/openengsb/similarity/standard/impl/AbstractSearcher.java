@@ -47,7 +47,7 @@ public abstract class AbstractSearcher implements Searcher {
     public List<String> findCollisions(EDBObject sample) {
         List<String> result = search(sample);
 
-        cleanupSearch();
+        close();
 
         return result;
     }
@@ -60,7 +60,7 @@ public abstract class AbstractSearcher implements Searcher {
             result.add(search(sample));
         }
 
-        cleanupSearch();
+        close();
 
         return result;
     }
@@ -99,7 +99,7 @@ public abstract class AbstractSearcher implements Searcher {
         return query(searchString);
     }
 
-    protected void cleanupSearch() {
+    protected void close() {
         try {
             this.index.close();
         } catch (CorruptIndexException e) {
