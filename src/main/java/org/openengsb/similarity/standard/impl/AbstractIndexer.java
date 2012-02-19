@@ -11,7 +11,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.util.Version;
 import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.core.api.edb.EngineeringDatabaseService;
@@ -19,7 +18,7 @@ import org.openengsb.similarity.standard.Indexer;
 
 public abstract class AbstractIndexer implements Indexer {
 
-    protected String path = "default";
+    protected String path = "";
 
     protected EngineeringDatabaseService edbService;
 
@@ -27,21 +26,19 @@ public abstract class AbstractIndexer implements Indexer {
     protected Directory index;
     protected IndexWriterConfig indexConfig;
 
+    protected Version luceneVersion = Version.LUCENE_35;
+
     abstract protected void addDocument(EDBObject c) throws IOException;
 
-    public AbstractIndexer() throws IOException {
-        init();
-    }
-
-    public AbstractIndexer(String path) throws IOException {
+    public AbstractIndexer(String path) {
         this.path = path;
-        init();
-    }
-
-    private void init() throws IOException, CorruptIndexException, LockObtainFailedException {
-        indexConfig = new IndexWriterConfig(Version.LUCENE_35, new WhitespaceAnalyzer(Version.LUCENE_35));
-        this.index = FSDirectory.open(new File(path));
-        this.writer = new IndexWriter(index, indexConfig);
+        indexConfig = new IndexWriterConfig(luceneVersion, new WhitespaceAnalyzer(luceneVersion));
+        try {
+            this.index = FSDirectory.open(new File(path));
+            this.writer = new IndexWriter(index, indexConfig);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -50,6 +47,8 @@ public abstract class AbstractIndexer implements Indexer {
         // TODO query for all objects
 
         try {
+            writer.deleteAll();
+            writer.commit();
 
             for (EDBObject c : edbService.query("", null)) {
                 addDocument(c);
@@ -107,6 +106,7 @@ public abstract class AbstractIndexer implements Indexer {
                 if (IndexWriter.isLocked(this.writer.getDirectory())) {
                     IndexWriter.unlock(this.writer.getDirectory());
                 }
+                buildIndex();
             } catch (IOException e) {
                 // TODO most certainly File-I/O probs but something should be
                 // done
@@ -115,7 +115,7 @@ public abstract class AbstractIndexer implements Indexer {
                 }
             }
         } catch (IOException e) {
-            // TODO panic, now its really a mess
+            // panic, now its really a mess
             e.printStackTrace();
         }
     }

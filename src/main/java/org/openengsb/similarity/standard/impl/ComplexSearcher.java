@@ -17,7 +17,7 @@ public class ComplexSearcher extends AbstractSearcher {
 
         ConcreteModel model = null;
 
-        String modelBasedQuery = "complexKey:" + model.getKey1() + "#" + model.getKey2() + "#" + model.getKey3();
+        // String modelBasedQuery = "complexKey:" + model.getKey1() + "#" + model.getKey2() + "#" + model.getKey3();
 
         String result = "";
         result +=

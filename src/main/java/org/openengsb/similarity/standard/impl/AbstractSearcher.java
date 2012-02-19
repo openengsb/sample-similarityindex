@@ -25,7 +25,7 @@ import org.openengsb.similarity.standard.Searcher;
 
 public abstract class AbstractSearcher implements Searcher {
 
-    protected String path = "default";
+    protected String path = "";
     protected final int MAX_NUMBER_OF_HITS = 50;
 
     // TODO load EDB converter & EDB (JPA) service
@@ -36,20 +36,18 @@ public abstract class AbstractSearcher implements Searcher {
     protected Directory index;
     protected IndexWriterConfig indexConfig;
 
+    protected Version luceneVersion = Version.LUCENE_35;
+
     abstract protected String buildQueryString(EDBObject sample);
 
-    public AbstractSearcher() throws IOException {
-        init();
-    }
-
-    public AbstractSearcher(String path) throws IOException {
+    public AbstractSearcher(String path) {
         this.path = path;
-        init();
-    }
-
-    private void init() throws IOException {
-        indexConfig = new IndexWriterConfig(Version.LUCENE_35, new WhitespaceAnalyzer(Version.LUCENE_35));
-        this.index = FSDirectory.open(new File(path));
+        try {
+            indexConfig = new IndexWriterConfig(Version.LUCENE_35, new WhitespaceAnalyzer(Version.LUCENE_35));
+            this.index = FSDirectory.open(new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -82,7 +80,7 @@ public abstract class AbstractSearcher implements Searcher {
             reader = IndexReader.open(index);
             IndexSearcher searcher = new IndexSearcher(reader);
             QueryParser parser =
-                new QueryParser(Version.LUCENE_35, "", new WhitespaceAnalyzer(Version.LUCENE_35));
+                new QueryParser(luceneVersion, "", new WhitespaceAnalyzer(luceneVersion));
             parser.setAllowLeadingWildcard(true);
             parser.setLowercaseExpandedTerms(false);
             Query query = parser.parse(searchString);
@@ -96,9 +94,9 @@ public abstract class AbstractSearcher implements Searcher {
             searcher.close();
             reader.close();
         } catch (ParseException e) {
-            result = new ArrayList<String>();
+            return new ArrayList<String>();
         } catch (IOException e) {
-            result = new ArrayList<String>();
+            return new ArrayList<String>();
         }
         return result;
     }
