@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.standard.impl.ComplexIndexer;
-import org.openengsb.similarity.standard.impl.ComplexSearcher;
-import org.openengsb.similarity.standard.impl.StandardIndexer;
-import org.openengsb.similarity.standard.impl.StandardSearcher;
+import org.openengsb.similarity.standard.internal.ComplexIndexer;
+import org.openengsb.similarity.standard.internal.ComplexSearcher;
+import org.openengsb.similarity.standard.internal.StandardIndexer;
+import org.openengsb.similarity.standard.internal.StandardSearcher;
 
 public class SimilarityTest {
 

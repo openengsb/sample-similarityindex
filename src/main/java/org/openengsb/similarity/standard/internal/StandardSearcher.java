@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.impl;
+package org.openengsb.similarity.standard.internal;
 
 import java.io.IOException;
 

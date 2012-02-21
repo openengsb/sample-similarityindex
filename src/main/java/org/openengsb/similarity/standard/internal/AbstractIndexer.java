@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.impl;
+package org.openengsb.similarity.standard.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,5 +131,4 @@ public abstract class AbstractIndexer implements Indexer {
     public String getPath() {
         return path;
     }
-
 }
