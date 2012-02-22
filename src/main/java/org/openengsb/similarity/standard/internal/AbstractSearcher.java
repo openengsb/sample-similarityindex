@@ -26,7 +26,7 @@ import org.openengsb.similarity.standard.Searcher;
 public abstract class AbstractSearcher implements Searcher {
 
     protected String path = "";
-    protected final int MAX_NUMBER_OF_HITS = 50;
+    protected final int maxNumberOfHits = 50;
 
     // TODO load EDB converter & EDB (JPA) service
     protected EDBConverter edbConverter;
@@ -38,7 +38,7 @@ public abstract class AbstractSearcher implements Searcher {
 
     protected Version luceneVersion = Version.LUCENE_35;
 
-    abstract protected String buildQueryString(EDBObject sample);
+    protected abstract String buildQueryString(EDBObject sample);
 
     public AbstractSearcher(String path) {
         this.path = path;
@@ -84,7 +84,7 @@ public abstract class AbstractSearcher implements Searcher {
             parser.setAllowLeadingWildcard(true);
             parser.setLowercaseExpandedTerms(false);
             Query query = parser.parse(searchString);
-            ScoreDoc[] results = searcher.search(query, MAX_NUMBER_OF_HITS).scoreDocs;
+            ScoreDoc[] results = searcher.search(query, maxNumberOfHits).scoreDocs;
 
             for (ScoreDoc result2 : results) {
                 int docId = result2.doc;

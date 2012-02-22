@@ -9,16 +9,16 @@ public interface Indexer {
     /**
      * (re)Builds the Index from scratch
      */
-    public void buildIndex();
+    void buildIndex();
 
     /**
      * Updates the Index
      */
-    public void updateIndex(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes);
+    void updateIndex(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes);
 
     /**
      * closes the index
      */
-    public void close();
+    void close();
 
 }

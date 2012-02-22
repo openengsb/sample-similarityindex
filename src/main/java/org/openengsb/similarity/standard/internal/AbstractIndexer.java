@@ -28,7 +28,7 @@ public abstract class AbstractIndexer implements Indexer {
 
     protected Version luceneVersion = Version.LUCENE_35;
 
-    abstract protected void addDocument(EDBObject c) throws IOException;
+    protected abstract void addDocument(EDBObject c) throws IOException;
 
     public AbstractIndexer(String path) {
         this.path = path;

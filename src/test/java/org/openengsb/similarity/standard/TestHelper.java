@@ -43,7 +43,7 @@ public class TestHelper {
                 }
             }
         }
-        return (path.delete());
+        return path.delete();
     }
 
     public static String generateSearchString(EDBObject sample) {
