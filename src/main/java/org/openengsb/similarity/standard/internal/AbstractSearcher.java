@@ -19,18 +19,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.core.api.ekb.QueryInterface;
-import org.openengsb.core.ekb.internal.EDBConverter;
 import org.openengsb.similarity.standard.Searcher;
 
 public abstract class AbstractSearcher implements Searcher {
 
     protected String path = "";
     protected final int maxNumberOfHits = 50;
-
-    // TODO load EDB converter & EDB (JPA) service
-    protected EDBConverter edbConverter;
-    protected QueryInterface queryInterfaceService;
 
     protected IndexReader reader;
     protected Directory index;
@@ -115,13 +109,4 @@ public abstract class AbstractSearcher implements Searcher {
             // TODO most certainly File-I/O probs but something should be done
         }
     }
-
-    public void setEdbConverter(EDBConverter edbConverter) {
-        this.edbConverter = edbConverter;
-    }
-
-    public void setQueryInterfaceService(QueryInterface queryInterfaceService) {
-        this.queryInterfaceService = queryInterfaceService;
-    }
-
 }
