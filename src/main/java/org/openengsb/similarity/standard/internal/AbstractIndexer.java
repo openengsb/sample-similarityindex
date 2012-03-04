@@ -44,13 +44,11 @@ public abstract class AbstractIndexer implements Indexer {
     @Override
     public void buildIndex() {
 
-        // TODO query for all objects
-
         try {
             writer.deleteAll();
             writer.commit();
 
-            for (EDBObject c : edbService.query("", null)) {
+            for (EDBObject c : edbService.getHead()) {
                 addDocument(c);
             }
 
