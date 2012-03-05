@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.internal;
+package org.openengsb.similarity.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.standard.Searcher;
+import org.openengsb.similarity.Searcher;
 
 public abstract class AbstractSearcher implements Searcher {
 

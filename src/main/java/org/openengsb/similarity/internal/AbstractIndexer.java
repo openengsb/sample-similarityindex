@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.internal;
+package org.openengsb.similarity.internal;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.core.api.edb.EngineeringDatabaseService;
-import org.openengsb.similarity.standard.Indexer;
+import org.openengsb.similarity.Indexer;
 
 public abstract class AbstractIndexer implements Indexer {
 
@@ -24,7 +24,6 @@ public abstract class AbstractIndexer implements Indexer {
 
     protected IndexWriter writer;
     protected Directory index;
-    protected IndexWriterConfig indexConfig;
 
     protected Version luceneVersion = Version.LUCENE_35;
 
@@ -32,10 +31,13 @@ public abstract class AbstractIndexer implements Indexer {
 
     public AbstractIndexer(String path) {
         this.path = path;
-        indexConfig = new IndexWriterConfig(luceneVersion, new WhitespaceAnalyzer(luceneVersion));
+    }
+
+    private void init() {
         try {
             this.index = FSDirectory.open(new File(path));
-            this.writer = new IndexWriter(index, indexConfig);
+            this.writer =
+                new IndexWriter(index, new IndexWriterConfig(luceneVersion, new WhitespaceAnalyzer(luceneVersion)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,15 +45,15 @@ public abstract class AbstractIndexer implements Indexer {
 
     @Override
     public void buildIndex() {
-
         try {
+            init();
             writer.deleteAll();
             writer.commit();
 
             for (EDBObject c : edbService.getHead()) {
                 addDocument(c);
             }
-
+            close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,6 +62,7 @@ public abstract class AbstractIndexer implements Indexer {
     @Override
     public void updateIndex(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes) {
         try {
+            init();
             if (inserts != null) {
                 for (EDBObject c : inserts) {
                     addDocument(c);
@@ -80,9 +83,9 @@ public abstract class AbstractIndexer implements Indexer {
             }
 
             this.writer.commit();
+            close();
         } catch (IOException e) {
             e.printStackTrace();
-            // recover
             buildIndex();
             close();
         }
@@ -99,8 +102,9 @@ public abstract class AbstractIndexer implements Indexer {
         try {
             try {
                 this.writer.close(true);
+                this.index.close();
             } catch (CorruptIndexException e) {
-                // FIXME delete the entire index and recreate
+                buildIndex();
                 if (IndexWriter.isLocked(this.writer.getDirectory())) {
                     IndexWriter.unlock(this.writer.getDirectory());
                 }
@@ -122,8 +126,11 @@ public abstract class AbstractIndexer implements Indexer {
         this.edbService = edbService;
     }
 
-    public IndexWriter getWriter() {
-        return writer;
+    public int getNumberOfDocs() throws IOException {
+        init();
+        int number = writer.numDocs();
+        close();
+        return number;
     }
 
     public String getPath() {

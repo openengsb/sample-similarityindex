@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard;
+package org.openengsb.similarity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.openengsb.core.api.edb.EDBObject;
+import org.openengsb.similarity.Indexer;
 
 public class TestHelper {
 

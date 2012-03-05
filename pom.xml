@@ -8,15 +8,15 @@
   </parent>
 
   <properties>
-    <bundle.symbolicName>org.openengsb.similarity.standard</bundle.symbolicName>
-    <bundle.namespace>org.openengsb.similarity.standard</bundle.namespace>
+    <bundle.symbolicName>org.openengsb.similarity</bundle.symbolicName>
+    <bundle.namespace>org.openengsb.similarity</bundle.namespace>
     <openengsb.framework.version>3.0.0-SNAPSHOT</openengsb.framework.version>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.openengsb.similarity</groupId>
-  <artifactId>org.openengsb.similarity.standard</artifactId>
+  <artifactId>org.openengsb.similarity</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <name>EDB custom index</name>

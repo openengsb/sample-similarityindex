@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.internal;
+package org.openengsb.similarity.internal;
 
 import java.io.IOException;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.openengsb.core.api.edb.EDBObject;
 public class ComplexIndexer extends AbstractIndexer {
 
     public ComplexIndexer() throws IOException {
-        super("complex");
+        super("data/similarity/complex");
     }
 
     @Override

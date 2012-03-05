@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.internal;
+package org.openengsb.similarity.internal;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.openengsb.core.api.edb.EDBObject;
 public class PLcFunctionTextOneSearcher extends AbstractSearcher {
 
     public PLcFunctionTextOneSearcher() throws IOException {
-        super("standard");
+        super("data/similarity/PLcFunctionTextOne");
     }
 
     @Override

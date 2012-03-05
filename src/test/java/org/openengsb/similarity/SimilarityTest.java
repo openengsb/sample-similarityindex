@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard;
+package org.openengsb.similarity;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.standard.internal.ComplexIndexer;
-import org.openengsb.similarity.standard.internal.ComplexSearcher;
-import org.openengsb.similarity.standard.internal.StandardIndexer;
-import org.openengsb.similarity.standard.internal.StandardSearcher;
+import org.openengsb.similarity.internal.ComplexIndexer;
+import org.openengsb.similarity.internal.ComplexSearcher;
+import org.openengsb.similarity.internal.StandardIndexer;
+import org.openengsb.similarity.internal.StandardSearcher;
 
 public class SimilarityTest {
 
@@ -52,28 +52,24 @@ public class SimilarityTest {
 
     @After
     public void tearDown() {
-        standardIndex.close();
-        complexIndex.close();
         TestHelper.pruneIndex(new File(standardIndex.getPath()));
         TestHelper.pruneIndex(new File(complexIndex.getPath()));
     }
 
     @Test
     public void testIndexModificationInsert() throws IOException {
-        assertEquals(0, standardIndex.getWriter().numDocs());
+        assertEquals(0, standardIndex.getNumberOfDocs());
         standardIndex.updateIndex(inserts, null, null);
-        assertEquals(100, standardIndex.getWriter().numDocs());
-        standardIndex.close();
+        assertEquals(100, standardIndex.getNumberOfDocs());
     }
 
     @Test
     public void testIndexModificationUpdate() throws IOException {
-        assertEquals(0, standardIndex.getWriter().numDocs());
+        assertEquals(0, standardIndex.getNumberOfDocs());
         standardIndex.updateIndex(inserts, null, null);
-        assertEquals(100, standardIndex.getWriter().numDocs());
+        assertEquals(100, standardIndex.getNumberOfDocs());
         standardIndex.updateIndex(null, updates, null);
-        assertEquals(100, standardIndex.getWriter().numDocs());
-        standardIndex.close();
+        assertEquals(100, standardIndex.getNumberOfDocs());
 
         assertEquals(1, standardSearcher.query(TestHelper.generateSearchString(updates.get(0))).size());
         assertEquals(updates.get(0).getOID(), standardSearcher.query(TestHelper.generateSearchString(updates.get(0)))
@@ -82,12 +78,11 @@ public class SimilarityTest {
 
     @Test
     public void testIndexModificatioDelete() throws IOException {
-        assertEquals(0, standardIndex.getWriter().numDocs());
+        assertEquals(0, standardIndex.getNumberOfDocs());
         standardIndex.updateIndex(inserts, null, null);
-        assertEquals(100, standardIndex.getWriter().numDocs());
+        assertEquals(100, standardIndex.getNumberOfDocs());
         standardIndex.updateIndex(null, null, deletes);
-        assertEquals(90, standardIndex.getWriter().numDocs());
-        standardIndex.close();
+        assertEquals(90, standardIndex.getNumberOfDocs());
 
         assertEquals(new ArrayList<String>(), standardSearcher.query(TestHelper.generateSearchString(deletes.get(0))));
     }

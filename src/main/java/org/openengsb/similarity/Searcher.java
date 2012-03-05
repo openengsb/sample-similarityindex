@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard;
+package org.openengsb.similarity;
 
 import java.util.ArrayList;
 import java.util.List;

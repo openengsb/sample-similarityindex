@@ -1,4 +1,4 @@
-package org.openengsb.similarity.standard.internal;
+package org.openengsb.similarity.internal;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.openengsb.core.api.edb.EDBObject;
 public class StandardSearcher extends AbstractSearcher {
 
     public StandardSearcher() throws IOException {
-        super("standard");
+        super("data/similarity/standard");
     }
 
     @Override
