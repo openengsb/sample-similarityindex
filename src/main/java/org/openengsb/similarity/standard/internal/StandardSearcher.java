@@ -12,8 +12,6 @@ public class StandardSearcher extends AbstractSearcher {
 
     @Override
     protected String buildQueryString(EDBObject sample) {
-        // ConcreteModel model = edbConverter.convertEDBObjectToModel(ConcreteModel.class, sample);
-
         String result = "";
         result += "key1:" + sample.getString("key1") + "~0.8 AND ";
         result += "key2:" + sample.getString("key2") + "~0.8 AND ";
