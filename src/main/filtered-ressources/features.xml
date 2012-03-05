@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="similarity-index-0.0.1" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.0.0 http://karaf.apache.org/xmlns/features/v1.0.0" >
+  <feature name="similarity-index" version="0.0.1" >
+  <feature version="3.0.0-SNAPSHOT">openengsb-framework</feature>
+    <bundle>mvn:org.openengsb.similarity/org.openengsb.similarity.standard/0.0.1-SNAPSHOT</bundle>
+    <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/3.5.0_1</bundle>
+  </feature>
+</features>
+
