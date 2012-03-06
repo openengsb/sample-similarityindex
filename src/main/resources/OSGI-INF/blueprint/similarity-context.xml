@@ -21,18 +21,6 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-  <service id="standardIndexer"  interface="org.openengsb.similarity.Indexer">
-    <bean class="org.openengsb.similarity.internal.StandardIndexer">
-      <property name="edbService" ref="edbService" />
-    </bean>
-  </service>
-
-  <service id="complexIndexer"  interface="org.openengsb.similarity.Indexer">
-    <bean class="org.openengsb.similarity.internal.ComplexIndexer">
-      <property name="edbService" ref="edbService" />
-    </bean>
-  </service>
-   
   <service id="pLCFunctionTextOneIndexer"  interface="org.openengsb.similarity.Indexer">
     <bean class="org.openengsb.similarity.internal.PLCFunctionTextOneIndexer">
       <property name="edbService" ref="edbService" />
@@ -53,14 +41,6 @@
     <bean class="org.openengsb.similarity.internal.PLCFunctionTextOneSearcher"/>
   </service>
    
-  <service id="standardSearcher"  interface="org.openengsb.similarity.Searcher">
-    <bean class="org.openengsb.similarity.internal.StandardSearcher"/>
-  </service>
-
-  <service id="complexSearcher"  interface="org.openengsb.similarity.Searcher">
-    <bean class="org.openengsb.similarity.internal.ComplexSearcher"/>
-  </service>
-
   <reference id="edbService" interface="org.openengsb.core.api.edb.EngineeringDatabaseService" />
   
 </blueprint>
