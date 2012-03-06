@@ -14,14 +14,24 @@
     </bean>
   </service>
    
-  <service id="pLcFunctionTextOneIndexer"  interface="org.openengsb.similarity.Indexer">
-    <bean class="org.openengsb.similarity.internal.PLcFunctionTextOneIndexer">
+  <service id="pLCFunctionTextOneIndexer"  interface="org.openengsb.similarity.Indexer">
+    <bean class="org.openengsb.similarity.internal.PLCFunctionTextOneIndexer">
       <property name="edbService" ref="edbService" />
     </bean>
   </service>
 
-  <service id="pLcFunctionTextOneOnesearcher"  interface="org.openengsb.similarity.Searcher">
-    <bean class="org.openengsb.similarity.internal.PLcFunctionTextOneSearcher"/>
+  <service id="pLCCombinedIndexer"  interface="org.openengsb.similarity.Indexer">
+    <bean class="org.openengsb.similarity.internal.PLCCombinedIndexer">
+      <property name="edbService" ref="edbService" />
+    </bean>
+  </service>
+
+  <service id="pLCCOmbinedOnesearcher"  interface="org.openengsb.similarity.Searcher">
+    <bean class="org.openengsb.similarity.internal.PLCCombinedSearcher"/>
+  </service>
+
+  <service id="pLCFunctionTextOneOnesearcher"  interface="org.openengsb.similarity.Searcher">
+    <bean class="org.openengsb.similarity.internal.PLCFunctionTextOneSearcher"/>
   </service>
    
   <service id="standardSearcher"  interface="org.openengsb.similarity.Searcher">

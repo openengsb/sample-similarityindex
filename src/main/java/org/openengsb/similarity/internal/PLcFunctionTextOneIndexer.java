@@ -7,9 +7,9 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class PLcFunctionTextOneIndexer extends AbstractIndexer {
+public class PLCFunctionTextOneIndexer extends AbstractIndexer {
 
-    public PLcFunctionTextOneIndexer() throws IOException {
+    public PLCFunctionTextOneIndexer() throws IOException {
         super("data/similarity/PLcFunctionTextOne");
     }
 

@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.openengsb.core.api.edb.EDBObject;
 
-public class PLcFunctionTextOneSearcher extends AbstractSearcher {
+public class PLCFunctionTextOneSearcher extends AbstractSearcher {
 
-    public PLcFunctionTextOneSearcher() throws IOException {
+    public PLCFunctionTextOneSearcher() throws IOException {
         super("data/similarity/PLcFunctionTextOne");
     }
 

@@ -14,7 +14,8 @@ public class ComplexSearcher extends AbstractSearcher {
     protected String buildQueryString(EDBObject sample) {
 
         String result =
-            "complexKey:" + sample.getString("key1") + "#" + sample.getString("key2") + "#" + sample.getString("key3");
+            "combinedkey:" + sample.getString("region") + "" + sample.getString("kks0") + ""
+                    + sample.getString("kks1") + "" + sample.getString("kks2") + "#" + sample.getString("kks3");
 
         return result;
     }
