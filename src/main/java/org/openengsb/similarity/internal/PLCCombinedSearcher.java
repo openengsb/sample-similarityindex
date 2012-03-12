@@ -29,9 +29,10 @@ public class PLCCombinedSearcher extends AbstractSearcher {
 
     @Override
     protected String buildQueryString(EDBObject sample) {
-
         String result =
-            "combined:" + sample.getString("key1") + "#" + sample.getString("key2") + "#" + sample.getString("key3");
+            "combinedkey:" + sample.getString("region") + "" + sample.getString("kks0") + ""
+                    + sample.getString("kks1") + "" + sample.getString("kks2") + "" + sample.getString("kks3");
+
         return result;
     }
 

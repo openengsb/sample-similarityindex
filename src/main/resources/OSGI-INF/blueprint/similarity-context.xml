@@ -22,22 +22,34 @@
  xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
   <service id="pLCFunctionTextOneIndexer"  interface="org.openengsb.similarity.Indexer">
+  	<service-properties>
+  		<entry key="indexer" value="PLCFunctionTextOne" />
+  	</service-properties>
     <bean class="org.openengsb.similarity.internal.PLCFunctionTextOneIndexer">
       <property name="edbService" ref="edbService" />
     </bean>
   </service>
 
   <service id="pLCCombinedIndexer"  interface="org.openengsb.similarity.Indexer">
+   	<service-properties>
+  		<entry key="indexer" value="PLCCombined" />
+  	</service-properties>
     <bean class="org.openengsb.similarity.internal.PLCCombinedIndexer">
       <property name="edbService" ref="edbService" />
     </bean>
   </service>
 
-  <service id="pLCCOmbinedOnesearcher"  interface="org.openengsb.similarity.Searcher">
+  <service id="pLCCOmbinedSearcher"  interface="org.openengsb.similarity.Searcher">
+	<service-properties>
+  		<entry key="searcher" value="PLCCombined" />
+  	</service-properties>
     <bean class="org.openengsb.similarity.internal.PLCCombinedSearcher"/>
   </service>
 
   <service id="pLCFunctionTextOneOnesearcher"  interface="org.openengsb.similarity.Searcher">
+  	<service-properties>
+  		<entry key="searcher" value="PLCFunctionTextOne" />
+  	</service-properties>  
     <bean class="org.openengsb.similarity.internal.PLCFunctionTextOneSearcher"/>
   </service>
    
