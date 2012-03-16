@@ -144,8 +144,8 @@ public abstract class AbstractIndex implements Index {
     }
 
     @Override
-    public List<ArrayList<String>> findCollisions(List<EDBObject> samples) {
-        List<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+    public List<List<String>> findCollisions(List<EDBObject> samples) {
+        List<List<String>> result = new ArrayList<List<String>>();
 
         for (EDBObject sample : samples) {
             result.add(search(sample));
@@ -157,7 +157,7 @@ public abstract class AbstractIndex implements Index {
     }
 
     @Override
-    public ArrayList<String> query(String searchString) {
+    public List<String> query(String searchString) {
         initReader();
         ArrayList<String> result = new ArrayList<String>();
 
@@ -186,7 +186,7 @@ public abstract class AbstractIndex implements Index {
         return result;
     }
 
-    protected ArrayList<String> search(EDBObject sample) {
+    protected List<String> search(EDBObject sample) {
         String searchString = buildQueryString(sample);
         return query(searchString);
     }

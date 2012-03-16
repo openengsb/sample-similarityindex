@@ -17,7 +17,6 @@
 
 package org.openengsb.similarity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openengsb.core.api.edb.EDBObject;
@@ -42,11 +41,11 @@ public interface Index {
     /**
      * Checks the Index if there are colliding objects for a list of samples
      */
-    List<ArrayList<String>> findCollisions(List<EDBObject> samples);
+    List<List<String>> findCollisions(List<EDBObject> samples);
 
     /**
      * query the index with lucene syntax
      */
-    ArrayList<String> query(String searchString);
+    List<String> query(String searchString);
 
 }
