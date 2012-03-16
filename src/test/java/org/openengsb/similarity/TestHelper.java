@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.Indexer;
 
 public class TestHelper {
 
@@ -59,7 +58,7 @@ public class TestHelper {
         return result;
     }
 
-    public static Map<String, Object> setupConcreteData(Indexer index) {
+    public static Map<String, Object> setupConcreteData(Index index) {
         Map<String, Object> object1 = new HashMap<String, Object>();
         object1.put("key1", "value1");
         object1.put("key2", "value2");
@@ -75,7 +74,6 @@ public class TestHelper {
         List<EDBObject> data = new ArrayList<EDBObject>(Arrays.asList(edbOb1, edbOb2));
 
         index.updateIndex(data, null, null);
-        index.close();
         return object1;
     }
 

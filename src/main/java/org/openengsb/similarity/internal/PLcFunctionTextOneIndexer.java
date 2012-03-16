@@ -24,7 +24,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class PLCFunctionTextOneIndexer extends AbstractIndexer {
+public class PLCFunctionTextOneIndexer extends AbstractIndex {
 
     public PLCFunctionTextOneIndexer() throws IOException {
         super("data/similarity/PLcFunctionTextOne");
@@ -39,6 +39,11 @@ public class PLCFunctionTextOneIndexer extends AbstractIndexer {
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
 
+    }
+
+    @Override
+    protected String buildQueryString(EDBObject sample) {
+        return "functiontextone:" + sample.getString("functiontextone") + "~0.8";
     }
 
 }

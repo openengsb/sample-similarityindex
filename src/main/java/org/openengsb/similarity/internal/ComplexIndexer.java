@@ -25,7 +25,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class ComplexIndexer extends AbstractIndexer {
+public class ComplexIndexer extends AbstractIndex {
 
     public ComplexIndexer() throws IOException {
         super("data/similarity/complex");
@@ -44,5 +44,14 @@ public class ComplexIndexer extends AbstractIndexer {
                 + "#" + content.get("key3").toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
+    }
+
+    @Override
+    protected String buildQueryString(EDBObject sample) {
+
+        String result =
+            "complexKey:" + sample.getString("key1") + "#" + sample.getString("key2") + "#" + sample.getString("key3");
+
+        return result;
     }
 }

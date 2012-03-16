@@ -24,10 +24,10 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class PLCCombinedIndexer extends AbstractIndexer {
+public class PLCCombinedIndexer extends AbstractIndex {
 
     public PLCCombinedIndexer() throws IOException {
-        super("data/similarity/standard");
+        super("data/similarity/plccombined");
     }
 
     @Override
@@ -42,6 +42,15 @@ public class PLCCombinedIndexer extends AbstractIndexer {
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
 
+    }
+
+    @Override
+    protected String buildQueryString(EDBObject sample) {
+        String result =
+            "combinedkey:" + sample.getString("region") + "" + sample.getString("kks0") + ""
+                    + sample.getString("kks1") + "" + sample.getString("kks2") + "" + sample.getString("kks3");
+
+        return result;
     }
 
 }

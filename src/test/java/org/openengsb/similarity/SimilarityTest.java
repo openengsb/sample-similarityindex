@@ -15,16 +15,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.similarity.internal.ComplexIndexer;
-import org.openengsb.similarity.internal.ComplexSearcher;
 import org.openengsb.similarity.internal.StandardIndexer;
-import org.openengsb.similarity.internal.StandardSearcher;
 
 public class SimilarityTest {
 
     private StandardIndexer standardIndex;
-    private StandardSearcher standardSearcher;
     private ComplexIndexer complexIndex;
-    private ComplexSearcher complexSearcher;
     private static List<EDBObject> inserts;
     private static List<EDBObject> deletes;
     private static List<EDBObject> updates;
@@ -45,9 +41,7 @@ public class SimilarityTest {
     @Before
     public void setUp() throws IOException {
         standardIndex = new StandardIndexer();
-        standardSearcher = new StandardSearcher();
         complexIndex = new ComplexIndexer();
-        complexSearcher = new ComplexSearcher();
     }
 
     @After
@@ -71,8 +65,8 @@ public class SimilarityTest {
         standardIndex.updateIndex(null, updates, null);
         assertEquals(100, standardIndex.getNumberOfDocs());
 
-        assertEquals(1, standardSearcher.query(TestHelper.generateSearchString(updates.get(0))).size());
-        assertEquals(updates.get(0).getOID(), standardSearcher.query(TestHelper.generateSearchString(updates.get(0)))
+        assertEquals(1, standardIndex.query(TestHelper.generateSearchString(updates.get(0))).size());
+        assertEquals(updates.get(0).getOID(), standardIndex.query(TestHelper.generateSearchString(updates.get(0)))
             .get(0));
     }
 
@@ -84,7 +78,7 @@ public class SimilarityTest {
         standardIndex.updateIndex(null, null, deletes);
         assertEquals(90, standardIndex.getNumberOfDocs());
 
-        assertEquals(new ArrayList<String>(), standardSearcher.query(TestHelper.generateSearchString(deletes.get(0))));
+        assertEquals(new ArrayList<String>(), standardIndex.query(TestHelper.generateSearchString(deletes.get(0))));
     }
 
     @Test
@@ -93,7 +87,7 @@ public class SimilarityTest {
 
         object1.put("key1", "Xalue1");
         EDBObject sample = new EDBObject(UUID.randomUUID().toString(), object1);
-        assertEquals(1, standardSearcher.findCollisions(sample).size());
+        assertEquals(1, standardIndex.findCollisions(sample).size());
     }
 
     @Test
@@ -102,7 +96,7 @@ public class SimilarityTest {
 
         object1.put("key1", "valuXX");
         EDBObject sample = new EDBObject(UUID.randomUUID().toString(), object1);
-        assertEquals(0, standardSearcher.findCollisions(sample).size());
+        assertEquals(0, standardIndex.findCollisions(sample).size());
     }
 
     @Test
@@ -110,7 +104,7 @@ public class SimilarityTest {
         Map<String, Object> object1 = TestHelper.setupConcreteData(complexIndex);
         EDBObject sample = new EDBObject(UUID.randomUUID().toString(), object1);
 
-        assertEquals(1, complexSearcher.findCollisions(sample).size());
+        assertEquals(1, complexIndex.findCollisions(sample).size());
     }
 
 }

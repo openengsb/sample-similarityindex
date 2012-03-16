@@ -25,7 +25,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class StandardIndexer extends AbstractIndexer {
+public class StandardIndexer extends AbstractIndex {
 
     public StandardIndexer() throws IOException {
         super("data/similarity/standard");
@@ -42,6 +42,16 @@ public class StandardIndexer extends AbstractIndexer {
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
 
+    }
+
+    @Override
+    protected String buildQueryString(EDBObject sample) {
+        String result = "";
+        result += "key1:" + sample.getString("key1") + "~0.8 AND ";
+        result += "key2:" + sample.getString("key2") + "~0.8 AND ";
+        result += "key3:" + sample.getString("key3") + "~0.8";
+
+        return result;
     }
 
 }

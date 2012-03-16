@@ -17,11 +17,12 @@
 
 package org.openengsb.similarity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openengsb.core.api.edb.EDBObject;
 
-public interface Indexer {
+public interface Index {
 
     /**
      * (re)Builds the Index from scratch
@@ -34,8 +35,18 @@ public interface Indexer {
     void updateIndex(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes);
 
     /**
-     * closes the index
+     * Checks the Index if there are colliding objects for one sample
      */
-    void close();
+    List<String> findCollisions(EDBObject sample);
+
+    /**
+     * Checks the Index if there are colliding objects for a list of samples
+     */
+    List<ArrayList<String>> findCollisions(List<EDBObject> samples);
+
+    /**
+     * query the index with lucene syntax
+     */
+    ArrayList<String> query(String searchString);
 
 }
