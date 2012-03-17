@@ -25,9 +25,9 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
-public class ComplexIndexer extends AbstractIndex {
+public class ComplexIndex extends AbstractIndex {
 
-    public ComplexIndexer() throws IOException {
+    public ComplexIndex() throws IOException {
         super("data/similarity/complex");
     }
 

@@ -37,6 +37,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.openengsb.core.api.edb.EDBCommit;
 import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.core.api.edb.EngineeringDatabaseService;
 import org.openengsb.similarity.Index;
@@ -97,25 +98,20 @@ public abstract class AbstractIndex implements Index {
     }
 
     @Override
-    public void updateIndex(List<EDBObject> inserts, List<EDBObject> updates, List<EDBObject> deletes) {
+    public void updateIndex(EDBCommit commit) {
         try {
             init();
-            if (inserts != null) {
-                for (EDBObject c : inserts) {
-                    addDocument(c);
+
+            if (commit.getDeletions() != null) {
+                for (String c : commit.getDeletions()) {
+                    deleteDocument(c);
                 }
             }
 
-            if (updates != null) {
-                for (EDBObject c : updates) {
-                    deleteDocument(c);
+            if (commit.getObjects() != null) {
+                for (EDBObject c : commit.getObjects()) {
+                    deleteDocument(c.getOID());
                     addDocument(c);
-                }
-            }
-
-            if (deletes != null) {
-                for (EDBObject c : deletes) {
-                    deleteDocument(c);
                 }
             }
 
@@ -128,8 +124,8 @@ public abstract class AbstractIndex implements Index {
         }
     }
 
-    protected void deleteDocument(EDBObject delete) throws IOException {
-        Term searchTerm = new Term("oid", delete.getOID());
+    protected void deleteDocument(String oid) throws IOException {
+        Term searchTerm = new Term("oid", oid);
 
         this.writer.deleteDocuments(searchTerm);
     }

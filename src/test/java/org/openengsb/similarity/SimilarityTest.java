@@ -14,34 +14,39 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.internal.ComplexIndexer;
-import org.openengsb.similarity.internal.StandardIndexer;
+import org.openengsb.similarity.internal.ComplexIndex;
+import org.openengsb.similarity.internal.StandardIndex;
 
 public class SimilarityTest {
 
-    private StandardIndexer standardIndex;
-    private ComplexIndexer complexIndex;
-    private static List<EDBObject> inserts;
-    private static List<EDBObject> deletes;
-    private static List<EDBObject> updates;
+    private StandardIndex standardIndex;
+    private ComplexIndex complexIndex;
+    private static DummyEDBCommit inserts;
+    private static DummyEDBCommit deletes;
+    private static DummyEDBCommit updates;
 
     @BeforeClass
     public static void generateLists() {
-        inserts = TestHelper.buildEDBObjects(100, 30);
-        deletes = inserts.subList(0, 10);
-        updates = inserts.subList(20, 30);
+        List<EDBObject> insert = TestHelper.buildEDBObjects(100, 30);
+        List<EDBObject> delete = insert.subList(0, 10);
+        List<EDBObject> update = insert.subList(20, 30);
 
         Integer counter = 20;
 
-        for (EDBObject update : updates) {
-            update.put(counter.toString(), counter);
+        for (EDBObject up : update) {
+            up.put(counter.toString(), counter);
         }
+
+        inserts = new DummyEDBCommit(insert, null);
+        deletes = new DummyEDBCommit(null, delete);
+        updates = new DummyEDBCommit(update, null);
+
     }
 
     @Before
     public void setUp() throws IOException {
-        standardIndex = new StandardIndexer();
-        complexIndex = new ComplexIndexer();
+        standardIndex = new StandardIndex();
+        complexIndex = new ComplexIndex();
     }
 
     @After
@@ -53,32 +58,34 @@ public class SimilarityTest {
     @Test
     public void testIndexModificationInsert() throws IOException {
         assertEquals(0, standardIndex.getNumberOfDocs());
-        standardIndex.updateIndex(inserts, null, null);
+        standardIndex.updateIndex(inserts);
         assertEquals(100, standardIndex.getNumberOfDocs());
     }
 
     @Test
     public void testIndexModificationUpdate() throws IOException {
         assertEquals(0, standardIndex.getNumberOfDocs());
-        standardIndex.updateIndex(inserts, null, null);
+        standardIndex.updateIndex(inserts);
         assertEquals(100, standardIndex.getNumberOfDocs());
-        standardIndex.updateIndex(null, updates, null);
+        standardIndex.updateIndex(updates);
         assertEquals(100, standardIndex.getNumberOfDocs());
 
-        assertEquals(1, standardIndex.query(TestHelper.generateSearchString(updates.get(0))).size());
-        assertEquals(updates.get(0).getOID(), standardIndex.query(TestHelper.generateSearchString(updates.get(0)))
-            .get(0));
+        assertEquals(1, standardIndex.query(TestHelper.generateSearchString(updates.getObjects().get(0))).size());
+        assertEquals(updates.getObjects().get(0).getOID(),
+            standardIndex.query(TestHelper.generateSearchString(updates.getObjects().get(0)))
+                .get(0));
     }
 
     @Test
     public void testIndexModificatioDelete() throws IOException {
         assertEquals(0, standardIndex.getNumberOfDocs());
-        standardIndex.updateIndex(inserts, null, null);
+        standardIndex.updateIndex(inserts);
         assertEquals(100, standardIndex.getNumberOfDocs());
-        standardIndex.updateIndex(null, null, deletes);
+        standardIndex.updateIndex(deletes);
         assertEquals(90, standardIndex.getNumberOfDocs());
 
-        assertEquals(new ArrayList<String>(), standardIndex.query(TestHelper.generateSearchString(deletes.get(0))));
+        assertEquals(new ArrayList<String>(),
+            standardIndex.query(TestHelper.generateSearchString(deletes.getDeletionsOriginal().get(0))));
     }
 
     @Test

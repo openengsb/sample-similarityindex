@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.openengsb.core.api.edb.EDBCommit;
 import org.openengsb.core.api.edb.EDBObject;
 
 public class TestHelper {
@@ -73,7 +74,9 @@ public class TestHelper {
 
         List<EDBObject> data = new ArrayList<EDBObject>(Arrays.asList(edbOb1, edbOb2));
 
-        index.updateIndex(data, null, null);
+        EDBCommit commit = new DummyEDBCommit(data, null);
+
+        index.updateIndex(commit);
         return object1;
     }
 
