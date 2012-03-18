@@ -25,6 +25,11 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
+/**
+ * 
+ * This class represents possible index-configurations
+ * 
+ */
 public class ComplexIndex extends AbstractIndex {
 
     public ComplexIndex() throws IOException {

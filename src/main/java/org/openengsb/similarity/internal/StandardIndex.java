@@ -25,6 +25,11 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
 
+/**
+ * 
+ * This class represents possible index-configurations
+ * 
+ */
 public class StandardIndex extends AbstractIndex {
 
     public StandardIndex() throws IOException {
@@ -41,7 +46,6 @@ public class StandardIndex extends AbstractIndex {
         }
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
-
     }
 
     @Override
