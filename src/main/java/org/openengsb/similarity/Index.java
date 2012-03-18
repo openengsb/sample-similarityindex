@@ -23,30 +23,33 @@ import org.openengsb.core.api.edb.EDBCommit;
 import org.openengsb.core.api.edb.EDBObject;
 
 public interface Index {
-
     /**
-     * (re)Builds the Index from scratch
+     * (re)builds the Index from scratch
      */
     void buildIndex();
 
     /**
-     * Updates the Index
+     * updates the Index with a given EDBCommit, that contains all new and deleted EDBObjects
      */
     void updateIndex(EDBCommit commit);
 
     /**
-     * Checks the Index if there are colliding objects for one sample
+     * checks the Index if there are similar EDBObjects for one sample and returns a list with oids from similar
+     * EDBObjects.
      */
     List<String> findCollisions(EDBObject sample);
 
     /**
-     * Checks the Index if there are colliding objects for a list of samples
+     * The findCollisions method takes a list of EDBObjects. The result of this method is a list of lists, while the
+     * inner lists contain the oids of the similar EDBObjects. In the result there is an inner list for every given
+     * sample EDBObject, that can be either empty (no similar EDB Object found), contains 1 oid (1 similar EDBObject
+     * found) or multiple EDBObjects ordered descending by their similarity with the sample.
      */
     List<List<String>> findCollisions(List<EDBObject> samples);
 
     /**
-     * query the index with lucene syntax
+     * the query method provides the functionality to search the Index for EDBObjects based on a searchString. The
+     * result is a list of oids that represent the EDBObjects.
      */
     List<String> query(String searchString);
-
 }
