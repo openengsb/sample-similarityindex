@@ -21,9 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -42,7 +44,12 @@ import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.core.api.edb.EngineeringDatabaseService;
 import org.openengsb.similarity.Index;
 
-public abstract class AbstractIndex implements Index {
+/**
+ * The two methods addDocument(EDBCommit) and buildQueryString(EDBObject) should be replaced in concrete
+ * implementations, otherwise the index indexes all fields of the EDBObject and the collision only uses the levenstein
+ * distance.
+ */
+public class AbstractIndex implements Index {
 
     protected final int maxNumberOfHits = 50;
     protected Version luceneVersion = Version.LUCENE_35;
@@ -53,10 +60,6 @@ public abstract class AbstractIndex implements Index {
     protected IndexWriter writer;
     protected IndexReader reader;
     protected Directory index;
-
-    protected abstract void addDocument(EDBObject c) throws IOException;
-
-    protected abstract String buildQueryString(EDBObject sample);
 
     public AbstractIndex(String path) {
         this.path = path;
@@ -122,6 +125,29 @@ public abstract class AbstractIndex implements Index {
             buildIndex();
             close();
         }
+    }
+
+    protected void addDocument(EDBObject content) throws IOException {
+        Document doc = new Document();
+
+        for (Map.Entry<String, Object> entry : content.entrySet()) {
+            doc.add(new Field(entry.getKey().toString(), entry.getValue().toString(), Field.Store.YES,
+                Field.Index.NOT_ANALYZED));
+        }
+
+        this.writer.updateDocument(new Term("oid", content.getOID()), doc);
+    }
+
+    protected String buildQueryString(EDBObject sample) {
+        String result = "";
+        for (Map.Entry<String, Object> entry : sample.entrySet()) {
+            if (result.length() != 0) {
+                result += " AND ";
+            }
+            result += entry.getKey().toString() + ":" + entry.getValue().toString() + "~0.8";
+        }
+
+        return result;
     }
 
     protected void deleteDocument(String oid) throws IOException {
@@ -193,17 +219,15 @@ public abstract class AbstractIndex implements Index {
                 this.writer.close(true);
                 this.index.close();
             } catch (CorruptIndexException e) {
-                buildIndex();
                 if (IndexWriter.isLocked(this.writer.getDirectory())) {
                     IndexWriter.unlock(this.writer.getDirectory());
                 }
                 buildIndex();
             } catch (IOException e) {
-                // TODO most certainly File-I/O probs but something should be
-                // done
                 if (IndexWriter.isLocked(this.writer.getDirectory())) {
                     IndexWriter.unlock(this.writer.getDirectory());
                 }
+                buildIndex();
             }
         } catch (IOException e) {
             // panic, now its really a mess

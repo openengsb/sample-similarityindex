@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.openengsb.similarity.internal;
+package org.openengsb.similarity.concreteIndex;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,16 +24,17 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
+import org.openengsb.similarity.internal.AbstractIndex;
 
 /**
  * 
  * This class represents possible index-configurations
  * 
  */
-public class StandardIndex extends AbstractIndex {
+public class ComplexIndex extends AbstractIndex {
 
-    public StandardIndex() throws IOException {
-        super("data/similarity/standard");
+    public ComplexIndex() throws IOException {
+        super("data/similarity/complex");
     }
 
     @Override
@@ -45,17 +46,18 @@ public class StandardIndex extends AbstractIndex {
                 Field.Index.NOT_ANALYZED));
         }
 
+        doc.add(new Field("complexKey", content.get("key1").toString() + "#" + content.get("key2").toString()
+                + "#" + content.get("key3").toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
     }
 
     @Override
     protected String buildQueryString(EDBObject sample) {
-        String result = "";
-        result += "key1:" + sample.getString("key1") + "~0.8 AND ";
-        result += "key2:" + sample.getString("key2") + "~0.8 AND ";
-        result += "key3:" + sample.getString("key3") + "~0.8";
+
+        String result =
+            "complexKey:" + sample.getString("key1") + "#" + sample.getString("key2") + "#" + sample.getString("key3");
 
         return result;
     }
-
 }

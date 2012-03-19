@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.internal.ComplexIndex;
-import org.openengsb.similarity.internal.StandardIndex;
+import org.openengsb.similarity.concreteIndex.ComplexIndex;
+import org.openengsb.similarity.concreteIndex.StandardIndex;
 
 public class SimilarityTest {
 

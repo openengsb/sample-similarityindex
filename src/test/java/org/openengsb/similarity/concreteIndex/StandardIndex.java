@@ -15,35 +15,48 @@
  * limitations under the License.
  */
 
-package org.openengsb.similarity.internal;
+package org.openengsb.similarity.concreteIndex;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
+import org.openengsb.similarity.internal.AbstractIndex;
 
-public class PLCFunctionTextOneIndex extends AbstractIndex {
+/**
+ * 
+ * This class represents possible index-configurations
+ * 
+ */
+public class StandardIndex extends AbstractIndex {
 
-    public PLCFunctionTextOneIndex() throws IOException {
-        super("data/similarity/PLcFunctionTextOne");
+    public StandardIndex() throws IOException {
+        super("data/similarity/standard");
     }
 
     @Override
     protected void addDocument(EDBObject content) throws IOException {
         Document doc = new Document();
 
-        doc.add(new Field("functiontextone", content.get("functiontextone").toString(), Field.Store.YES,
-            Field.Index.NOT_ANALYZED));
+        for (Map.Entry<String, Object> entry : content.entrySet()) {
+            doc.add(new Field(entry.getKey().toString(), entry.getValue().toString(), Field.Store.YES,
+                Field.Index.NOT_ANALYZED));
+        }
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
-
     }
 
     @Override
     protected String buildQueryString(EDBObject sample) {
-        return "functiontextone:" + sample.getString("functiontextone") + "~0.8";
+        String result = "";
+        result += "key1:" + sample.getString("key1") + "~0.8 AND ";
+        result += "key2:" + sample.getString("key2") + "~0.8 AND ";
+        result += "key3:" + sample.getString("key3") + "~0.8";
+
+        return result;
     }
 
 }
