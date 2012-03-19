@@ -25,10 +25,7 @@
   <feature version="3.0.0-SNAPSHOT">openengsb-framework</feature>
     <bundle>mvn:org.openengsb.similarity/org.openengsb.similarity/1.0.0-SNAPSHOT</bundle>
     <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.lucene/3.5.0_1</bundle>
-    <bundle>mvn:org.openengsb.framework.edb.collisionTrigger/org.openengsb.framework.edb.collisionTrigger/1.0.0-SNAPSHOT</bundle>
-    <bundle>mvn:org.openengsb.framework.edb.updateTrigger/org.openengsb.framework.edb.updateTrigger/1.0.0-SNAPSHOT</bundle>
-    <bundle>mvn:org.openengsb.framework.edb.errorTrigger/org.openengsb.framework.edb.errorTrigger/1.0.0-SNAPSHOT</bundle>
-    
+    <bundle>mvn:org.openengsb.framework.edb.edbListener/org.openengsb.framework.edb.edbListener/1.0.0-SNAPSHOT</bundle>    
   </feature>
 </features>
 

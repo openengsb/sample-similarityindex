@@ -24,7 +24,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
 import org.openengsb.core.api.edb.EDBObject;
-import org.openengsb.similarity.internal.AbstractIndex;
+import org.openengsb.similarity.AbstractIndex;
 
 /**
  * 

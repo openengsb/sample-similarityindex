@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.openengsb.similarity.internal;
+package org.openengsb.similarity;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,6 @@ import org.apache.lucene.util.Version;
 import org.openengsb.core.api.edb.EDBCommit;
 import org.openengsb.core.api.edb.EDBObject;
 import org.openengsb.core.api.edb.EngineeringDatabaseService;
-import org.openengsb.similarity.Index;
 
 /**
  * The two methods addDocument(EDBCommit) and buildQueryString(EDBObject) should be replaced in concrete

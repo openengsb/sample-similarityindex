@@ -70,8 +70,7 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Import-Package>
-            </Import-Package>
+            <Import-Package></Import-Package>
             <DynamicImport-Package>*</DynamicImport-Package>
           </instructions>
         </configuration>
