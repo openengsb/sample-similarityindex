@@ -31,7 +31,7 @@ public class DummyEDBCommit implements EDBCommit {
     }
 
     @Override
-    public void add(EDBObject obj) throws EDBException {
+    public void insert(EDBObject obj) throws EDBException {
     }
 
     @Override
@@ -79,6 +79,20 @@ public class DummyEDBCommit implements EDBCommit {
 
     @Override
     public void setTimestamp(Long timestamp) {
+    }
+
+    @Override
+    public List<EDBObject> getInserts() {
+        return null;
+    }
+
+    @Override
+    public List<EDBObject> getUpdates() {
+        return null;
+    }
+
+    @Override
+    public void update(EDBObject arg0) throws EDBException {
     }
 
 }
