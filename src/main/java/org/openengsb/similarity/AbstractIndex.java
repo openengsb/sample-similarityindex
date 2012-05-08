@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -50,6 +51,7 @@ import org.openengsb.core.api.edb.EngineeringDatabaseService;
  */
 public class AbstractIndex implements Index {
 
+    private final Logger logger = Logger.getLogger(AbstractIndex.class);
     protected final int maxNumberOfHits = 50;
     protected Version luceneVersion = Version.LUCENE_35;
     protected String path = "";
@@ -66,20 +68,22 @@ public class AbstractIndex implements Index {
 
     private void init() {
         try {
+            logger.debug("initialize index writer (" + path + ")");
             this.index = FSDirectory.open(new File(path));
             this.writer =
                 new IndexWriter(index, new IndexWriterConfig(luceneVersion, new WhitespaceAnalyzer(luceneVersion)));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("could not initialize index writer (" + path + ")");
         }
     }
 
     private void initReader() {
         try {
+            logger.debug("initialize index reader (" + path + ")");
             this.index = FSDirectory.open(new File(path));
             this.reader = IndexReader.open(index);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("could not initialize index reader (" + path + ")");
         }
     }
 
@@ -95,7 +99,7 @@ public class AbstractIndex implements Index {
             }
             close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("index could not be created from cratch (" + path + ")");
         }
     }
 
@@ -120,7 +124,7 @@ public class AbstractIndex implements Index {
             this.writer.commit();
             close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("index could not be updated (" + path + ")");
             buildIndex();
             close();
         }
@@ -135,6 +139,7 @@ public class AbstractIndex implements Index {
         }
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
+        logger.debug("new document added (" + path + ")");
     }
 
     protected String buildQueryString(EDBObject sample) {
@@ -153,14 +158,13 @@ public class AbstractIndex implements Index {
         Term searchTerm = new Term("oid", oid);
 
         this.writer.deleteDocuments(searchTerm);
+        logger.debug("document with oid " + oid + " was deleted (" + path + ")");
     }
 
     @Override
     public List<String> findCollisions(EDBObject sample) {
         List<String> result = search(sample);
-
         close();
-
         return result;
     }
 
@@ -173,7 +177,6 @@ public class AbstractIndex implements Index {
         }
 
         close();
-
         return result;
     }
 
@@ -200,8 +203,10 @@ public class AbstractIndex implements Index {
             reader.close();
 
         } catch (ParseException e) {
+            logger.error("the query could not be parsed: " + searchString);
             return new ArrayList<String>();
         } catch (IOException e) {
+            logger.error("the query could not be executed (" + path + ")");
             return new ArrayList<String>();
         }
         return result;
@@ -229,7 +234,7 @@ public class AbstractIndex implements Index {
                 buildIndex();
             }
         } catch (IOException e) {
-            // panic, now its really a mess
+            logger.error("the query could not be executed (" + path + ")");
             e.printStackTrace();
         }
     }

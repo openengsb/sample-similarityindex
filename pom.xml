@@ -124,10 +124,21 @@
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>3.5.0</version>
-    </dependency>   
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>1.6.4</version>
+    </dependency>
   </dependencies>
 
-    <repositories>
+  <repositories>
     <repository> <!-- OEB snapshots are deployed here -->
      <id>sonatype-snapshots</id>
       <name>Sonaype Snapsht Repository</name>
