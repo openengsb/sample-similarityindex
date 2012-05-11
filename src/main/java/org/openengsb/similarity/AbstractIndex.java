@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -187,7 +188,6 @@ public class AbstractIndex implements Index {
     public List<String> query(String searchString) {
         initReader();
         ArrayList<String> result = new ArrayList<String>();
-
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             QueryParser parser =
@@ -196,15 +196,9 @@ public class AbstractIndex implements Index {
             parser.setLowercaseExpandedTerms(false);
             Query query = parser.parse(searchString);
             ScoreDoc[] results = searcher.search(query, MAX_NUMBER_OF_HITS).scoreDocs;
-
-            for (ScoreDoc result2 : results) {
-                int docId = result2.doc;
-                Document document = searcher.doc(docId);
-                result.add(document.get("oid"));
-            }
+            formatResults(result, searcher, results);
             searcher.close();
             reader.close();
-
         } catch (ParseException e) {
             LOGGER.error("the query could not be parsed: " + searchString);
             LOGGER.debug(e.getStackTrace());
@@ -215,6 +209,15 @@ public class AbstractIndex implements Index {
             return new ArrayList<String>();
         }
         return result;
+    }
+
+    private void formatResults(ArrayList<String> result, IndexSearcher searcher, ScoreDoc[] results)
+        throws CorruptIndexException, IOException {
+        for (ScoreDoc result2 : results) {
+            int docId = result2.doc;
+            Document document = searcher.doc(docId);
+            result.add(document.get("oid"));
+        }
     }
 
     protected List<String> search(EDBObject sample) {
