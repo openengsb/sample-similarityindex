@@ -51,10 +51,10 @@ import org.openengsb.core.api.edb.EngineeringDatabaseService;
  */
 public class AbstractIndex implements Index {
 
-    private final Logger logger = Logger.getLogger(AbstractIndex.class);
-    protected final int maxNumberOfHits = 50;
-    protected Version luceneVersion = Version.LUCENE_35;
-    protected String path = "";
+    private static final Logger LOGGER = Logger.getLogger(AbstractIndex.class);
+    protected static final int MAX_NUMBER_OF_HITS = 50;
+    protected static Version LUCENE_VERSION = Version.LUCENE_35;
+    protected static String PATH = "";
 
     protected EngineeringDatabaseService edbService;
 
@@ -62,28 +62,28 @@ public class AbstractIndex implements Index {
     protected IndexReader reader;
     protected Directory index;
 
-    public AbstractIndex(String path) {
-        this.path = path;
+    public AbstractIndex(String PATH) {
+        this.PATH = PATH;
     }
 
     private void init() {
         try {
-            logger.debug("initialize index writer (" + path + ")");
-            this.index = FSDirectory.open(new File(path));
+            LOGGER.debug("initialize index writer (" + PATH + ")");
+            this.index = FSDirectory.open(new File(PATH));
             this.writer =
-                new IndexWriter(index, new IndexWriterConfig(luceneVersion, new WhitespaceAnalyzer(luceneVersion)));
+                new IndexWriter(index, new IndexWriterConfig(LUCENE_VERSION, new WhitespaceAnalyzer(LUCENE_VERSION)));
         } catch (IOException e) {
-            logger.error("could not initialize index writer (" + path + ")");
+            LOGGER.error("could not initialize index writer (" + PATH + ")");
         }
     }
 
     private void initReader() {
         try {
-            logger.debug("initialize index reader (" + path + ")");
-            this.index = FSDirectory.open(new File(path));
+            LOGGER.debug("initialize index reader (" + PATH + ")");
+            this.index = FSDirectory.open(new File(PATH));
             this.reader = IndexReader.open(index);
         } catch (IOException e) {
-            logger.error("could not initialize index reader (" + path + ")");
+            LOGGER.error("could not initialize index reader (" + PATH + ")");
         }
     }
 
@@ -99,7 +99,7 @@ public class AbstractIndex implements Index {
             }
             close();
         } catch (IOException e) {
-            logger.error("index could not be created from cratch (" + path + ")");
+            LOGGER.error("index could not be created from cratch (" + PATH + ")");
         }
     }
 
@@ -124,7 +124,7 @@ public class AbstractIndex implements Index {
             this.writer.commit();
             close();
         } catch (IOException e) {
-            logger.error("index could not be updated (" + path + ")");
+            LOGGER.error("index could not be updated (" + PATH + ")");
             buildIndex();
             close();
         }
@@ -139,7 +139,7 @@ public class AbstractIndex implements Index {
         }
 
         this.writer.updateDocument(new Term("oid", content.getOID()), doc);
-        logger.debug("new document added (" + path + ")");
+        LOGGER.debug("new document added (" + PATH + ")");
     }
 
     protected String buildQueryString(EDBObject sample) {
@@ -158,7 +158,7 @@ public class AbstractIndex implements Index {
         Term searchTerm = new Term("oid", oid);
 
         this.writer.deleteDocuments(searchTerm);
-        logger.debug("document with oid " + oid + " was deleted (" + path + ")");
+        LOGGER.debug("document with oid " + oid + " was deleted (" + PATH + ")");
     }
 
     @Override
@@ -188,11 +188,11 @@ public class AbstractIndex implements Index {
         try {
             IndexSearcher searcher = new IndexSearcher(reader);
             QueryParser parser =
-                new QueryParser(luceneVersion, "", new WhitespaceAnalyzer(luceneVersion));
+                new QueryParser(LUCENE_VERSION, "", new WhitespaceAnalyzer(LUCENE_VERSION));
             parser.setAllowLeadingWildcard(true);
             parser.setLowercaseExpandedTerms(false);
             Query query = parser.parse(searchString);
-            ScoreDoc[] results = searcher.search(query, maxNumberOfHits).scoreDocs;
+            ScoreDoc[] results = searcher.search(query, MAX_NUMBER_OF_HITS).scoreDocs;
 
             for (ScoreDoc result2 : results) {
                 int docId = result2.doc;
@@ -203,10 +203,10 @@ public class AbstractIndex implements Index {
             reader.close();
 
         } catch (ParseException e) {
-            logger.error("the query could not be parsed: " + searchString);
+            LOGGER.error("the query could not be parsed: " + searchString);
             return new ArrayList<String>();
         } catch (IOException e) {
-            logger.error("the query could not be executed (" + path + ")");
+            LOGGER.error("the query could not be executed (" + PATH + ")");
             return new ArrayList<String>();
         }
         return result;
@@ -234,7 +234,7 @@ public class AbstractIndex implements Index {
                 buildIndex();
             }
         } catch (IOException e) {
-            logger.error("the query could not be executed (" + path + ")");
+            LOGGER.error("the query could not be executed (" + PATH + ")");
             e.printStackTrace();
         }
     }
@@ -251,6 +251,6 @@ public class AbstractIndex implements Index {
     }
 
     public String getPath() {
-        return path;
+        return PATH;
     }
 }
