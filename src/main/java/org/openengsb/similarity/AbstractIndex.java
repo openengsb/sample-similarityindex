@@ -74,6 +74,7 @@ public class AbstractIndex implements Index {
                 new IndexWriter(index, new IndexWriterConfig(LUCENE_VERSION, new WhitespaceAnalyzer(LUCENE_VERSION)));
         } catch (IOException e) {
             LOGGER.error("could not initialize index writer (" + PATH + ")");
+            LOGGER.debug(e.getStackTrace());
         }
     }
 
@@ -84,6 +85,7 @@ public class AbstractIndex implements Index {
             this.reader = IndexReader.open(index);
         } catch (IOException e) {
             LOGGER.error("could not initialize index reader (" + PATH + ")");
+            LOGGER.debug(e.getStackTrace());
         }
     }
 
@@ -100,6 +102,7 @@ public class AbstractIndex implements Index {
             close();
         } catch (IOException e) {
             LOGGER.error("index could not be created from cratch (" + PATH + ")");
+            LOGGER.debug(e.getStackTrace());
         }
     }
 
@@ -125,6 +128,7 @@ public class AbstractIndex implements Index {
             close();
         } catch (IOException e) {
             LOGGER.error("index could not be updated (" + PATH + ")");
+            LOGGER.debug(e.getStackTrace());
             buildIndex();
             close();
         }
@@ -204,9 +208,11 @@ public class AbstractIndex implements Index {
 
         } catch (ParseException e) {
             LOGGER.error("the query could not be parsed: " + searchString);
+            LOGGER.debug(e.getStackTrace());
             return new ArrayList<String>();
         } catch (IOException e) {
             LOGGER.error("the query could not be executed (" + PATH + ")");
+            LOGGER.debug(e.getStackTrace());
             return new ArrayList<String>();
         }
         return result;
@@ -235,7 +241,7 @@ public class AbstractIndex implements Index {
             }
         } catch (IOException e) {
             LOGGER.error("the query could not be executed (" + PATH + ")");
-            e.printStackTrace();
+            LOGGER.debug(e.getStackTrace());
         }
     }
 
@@ -250,7 +256,7 @@ public class AbstractIndex implements Index {
         return number;
     }
 
-    public String getPath() {
+    public String getPATH() {
         return PATH;
     }
 }

@@ -51,8 +51,8 @@ public class SimilarityTest {
 
     @After
     public void tearDown() {
-        TestHelper.pruneIndex(new File(standardIndex.getPath()));
-        TestHelper.pruneIndex(new File(complexIndex.getPath()));
+        TestHelper.pruneIndex(new File(standardIndex.getPATH()));
+        TestHelper.pruneIndex(new File(complexIndex.getPATH()));
     }
 
     @Test
