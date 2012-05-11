@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -225,22 +224,22 @@ public class AbstractIndex implements Index {
 
     private void close() {
         try {
-            try {
-                this.writer.close(true);
-                this.index.close();
-            } catch (CorruptIndexException e) {
-                if (IndexWriter.isLocked(this.writer.getDirectory())) {
-                    IndexWriter.unlock(this.writer.getDirectory());
-                }
-                buildIndex();
-            } catch (IOException e) {
-                if (IndexWriter.isLocked(this.writer.getDirectory())) {
-                    IndexWriter.unlock(this.writer.getDirectory());
-                }
-                buildIndex();
-            }
+            this.writer.close(true);
+            this.index.close();
         } catch (IOException e) {
-            LOGGER.error("the query could not be executed (" + PATH + ")");
+            restoreIndex();
+        }
+    }
+
+    private void restoreIndex() {
+        try {
+            if (IndexWriter.isLocked(this.writer.getDirectory())) {
+                IndexWriter.unlock(this.writer.getDirectory());
+            }
+            buildIndex();
+            LOGGER.info("the index was restored (" + PATH + ")");
+        } catch (IOException e) {
+            LOGGER.error("the index could not be restored (" + PATH + ")");
             LOGGER.debug(e.getStackTrace());
         }
     }
