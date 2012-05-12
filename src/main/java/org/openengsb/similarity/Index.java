@@ -49,7 +49,8 @@ public interface Index {
 
     /**
      * the query method provides the functionality to search the Index for EDBObjects based on a searchString. The
-     * result is a list of oids that represent the EDBObjects.
+     * result is a list of oids that represent the EDBObjects. The syntax of these queries is the same as for Lucene
+     * queries.
      */
     List<String> query(String searchString);
 }
